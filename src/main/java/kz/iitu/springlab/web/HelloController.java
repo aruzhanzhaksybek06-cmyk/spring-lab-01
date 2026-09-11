@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-
+// REST controller for Lab 01 endpoints
 @RestController
 @RequestMapping("/api")
 public class HelloController {
