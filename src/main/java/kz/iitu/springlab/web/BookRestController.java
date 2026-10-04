@@ -2,6 +2,7 @@ package kz.iitu.springlab.web;
 
 import kz.iitu.springlab.catalog.Book;
 import kz.iitu.springlab.catalog.BookService;
+import kz.iitu.springlab.catalog.BookStats;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,11 @@ public class BookRestController {
                 .stream()
                 .limit(limit)
                 .toList();
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<BookStats> stats() {
+        return ResponseEntity.ok(service.getStats());
     }
 
     @GetMapping("/{id}")

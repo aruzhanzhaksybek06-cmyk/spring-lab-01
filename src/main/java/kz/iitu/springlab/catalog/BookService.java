@@ -64,4 +64,22 @@ public class BookService {
     public boolean delete(long id) {
         return repository.deleteById(id);
     }
+
+    public BookStats getStats() {
+        List<Book> books = repository.findAll();
+
+        long count = books.size();
+
+        Integer earliestYear = books.stream()
+                .map(Book::year)
+                .min(Integer::compareTo)
+                .orElse(null);
+
+        Integer latestYear = books.stream()
+                .map(Book::year)
+                .max(Integer::compareTo)
+                .orElse(null);
+
+        return new BookStats(count, earliestYear, latestYear);
+    }
 }
