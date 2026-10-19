@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,37 @@ public class BookApiController {
                              BookMapper mapper) {
         this.service = service;
         this.mapper = mapper;
+    }
+
+    // Individual Variant 9 - Search books
+    @Operation(summary = "Search books by title")
+    @GetMapping("/search")
+    public ResponseEntity<?> search(
+            @RequestParam(required = false) String q) {
+
+        if (q == null || q.trim().isEmpty()) {
+            ProblemDetail problem =
+                    ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+
+            problem.setTitle("Bad Request");
+            problem.setDetail("Search query must not be empty");
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(problem);
+        }
+
+        String query = q.trim().toLowerCase();
+
+        List<BookResponse> results = mapper.toResponseList(
+                service.findAll().stream()
+                        .filter(book ->
+                                book.title().toLowerCase()
+                                        .contains(query))
+                        .toList()
+        );
+
+        return ResponseEntity.ok(results);
     }
 
     // GET all books - 200
